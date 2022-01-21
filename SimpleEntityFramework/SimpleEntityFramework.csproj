@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{925116C3-2CB1-4901-B4ED-E85C23C960CF}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>SimpleEntityFramework</RootNamespace>
+    <AssemblyName>sef</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Domain\Objects\Templates\ClassTemplate.cs" />
+    <Compile Include="Domain\Objects\Templates\Entity\BaseEntityTemplate.cs" />
+    <Compile Include="Domain\Objects\Templates\Entity\EntityInterfaceTemplate.cs" />
+    <Compile Include="Domain\Objects\Schemas\EntitySchema.cs" />
+    <Compile Include="Domain\Objects\Schemas\PropertySchema.cs" />
+    <Compile Include="Domain\Objects\Templates\Framework\EntityMapperTemplate.cs" />
+    <Compile Include="Domain\Objects\Templates\Framework\ExpressionVisitorTemplate.cs" />
+    <Compile Include="Domain\Objects\Templates\Framework\FrameworkProjectTemplate.cs" />
+    <Compile Include="Domain\Objects\Templates\Framework\HttpHelperTemplate.cs" />
+    <Compile Include="Domain\Objects\Templates\Framework\JsonHelperTemplate.cs" />
+    <Compile Include="Domain\Objects\Templates\Framework\LoggerTemplate.cs" />
+    <Compile Include="Domain\Objects\Templates\Framework\RuntimeExtensionsTemplate.cs" />
+    <Compile Include="Domain\Objects\Templates\ProjectTemplate.cs" />
+    <Compile Include="Domain\Objects\Templates\AssemblyInfoTemplate.cs" />
+    <Compile Include="Domain\Roles\ISefGenerator.cs" />
+    <Compile Include="Domain\Roles\Schemas\IEntitySchema.cs" />
+    <Compile Include="Domain\Roles\Schemas\IPropertySchema.cs" />
+    <Compile Include="Domain\Roles\Templates\IClassTemplate.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Domain\Objects\SefGenerator.cs" />
+    <Compile Include="Domain\Objects\Templates\Repository\BaseReposTemplate.cs" />
+    <Compile Include="Domain\Objects\Templates\BaseTemplate.cs" />
+    <Compile Include="Domain\Objects\Templates\Framework\DatabaseTemplate.cs" />
+    <Compile Include="Domain\Objects\Templates\Entity\EntityAssemblyInfoTemplate.cs" />
+    <Compile Include="Domain\Objects\Templates\Entity\EntityProjectTemplate.cs" />
+    <Compile Include="Domain\Objects\Templates\Entity\EntityTemplate.cs" />
+    <Compile Include="Domain\Roles\Templates\IProjectTemplate.cs" />
+    <Compile Include="Domain\Roles\Templates\ITemplate.cs" />
+    <Compile Include="Domain\Objects\Templates\Repository\ReposAssemblyInfoTemplate.cs" />
+    <Compile Include="Domain\Objects\Templates\Repository\ReposProjectTemplate.cs" />
+    <Compile Include="Domain\Objects\Templates\Repository\ReposTemplate.cs" />
+    <Compile Include="Infrastracture\Database.cs" />
+    <Compile Include="Infrastracture\EntityMapper.cs" />
+    <Compile Include="Infrastracture\Logger.cs" />
+    <Compile Include="Infrastracture\RuntimeExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
