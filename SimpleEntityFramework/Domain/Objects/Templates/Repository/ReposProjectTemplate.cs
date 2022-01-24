@@ -13,7 +13,7 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
 
         public override string Name => ProjectName;
 
-        public ReposProjectTemplate(ISefBuilder gear) : base(gear)
+        public ReposProjectTemplate(ISefBuilder builder) : base(builder)
         {
             RefDlls.AddRange(DefaultRefDlls);
             RefDlls.Add("System.Configuration");

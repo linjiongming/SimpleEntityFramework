@@ -25,9 +25,9 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
 
         private readonly AssemblyInfoTemplate _assemblyInfo;
 
-        public ProjectTemplate(ISefBuilder gear)
+        public ProjectTemplate(ISefBuilder builder)
         {
-            Builder = gear;
+            Builder = builder;
             ID = Guid.NewGuid();
             _assemblyInfo = new AssemblyInfoTemplate(this);
         }

@@ -13,7 +13,7 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
 
         public override string Name => ProjectName;
 
-        public EntityProjectTemplate(ISefBuilder gear) : base(gear)
+        public EntityProjectTemplate(ISefBuilder builder) : base(builder)
         {
             RefDlls.AddRange(DefaultRefDlls);
             CompileItems.Add(new EntityInterfaceTemplate(this));
