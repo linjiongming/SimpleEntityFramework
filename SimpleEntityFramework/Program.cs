@@ -23,7 +23,7 @@ namespace SimpleEntityFramework
             }
 
             var r = cla.Option("-r | --root <NamespaceRoot>", "Namespace Root (Default \"My\")", CommandOptionType.SingleValue);
-            var c = cla.Option("-c | --conn <ConnectionString>", "Connection String", CommandOptionType.SingleValue);
+            var c = cla.Option("-c | --connection <ConnectionString>", "Connection String", CommandOptionType.SingleValue);
             var p = cla.Option("-p | --provider <ProviderName>", "Database Provider (Default \"System.Data.SqlClient\")", CommandOptionType.SingleValue);
             var o = cla.Option("-o | --output <OutputFolder>", "Output Directory (Default \"[BaseDirectory]\\Output\")", CommandOptionType.SingleValue);
 

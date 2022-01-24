@@ -14,23 +14,21 @@ namespace SimpleEntityFramework.Domain.Objects
 {
     public class SefBuilder : ISefBuilder
     {
-        private List<string> _tables;
-        private List<IEntitySchema> _entities;
-        private List<IProjectTemplate> _projects;
-
         public string NamespaceRoot { get; set; }
         public string OutputFolder { get; set; }
         public Database Database { get; set; }
-
-        public List<string> Tables => _tables;
-        public List<IEntitySchema> Entities => _entities;
-        public List<IProjectTemplate> Projects => _projects;
+        public List<string> Tables { get; }
+        public List<IEntitySchema> Entities { get; }
+        public List<IProjectTemplate> Projects { get; }
 
         public SefBuilder()
         {
             NamespaceRoot = "My";
             Database = new Database() { ProviderName = "System.Data.SqlClient" };
             OutputFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Output");
+            Tables = new List<string>();
+            Entities = new List<IEntitySchema>();
+            Projects = new List<IProjectTemplate>();
         }
 
         private void Prepare()
@@ -45,11 +43,10 @@ namespace SimpleEntityFramework.Domain.Objects
                 Database = Database.GetDefault();
             }
 
-            _entities = new List<IEntitySchema>();
             using (var adapter = Database.CreateDataAdapter())
             using (var conn = Database.OpenConnection())
             {
-                _tables = conn.GetSchema("Tables").AsEnumerable().Select(dr => dr.Field<string>(2)).ToList();
+                Tables.AddRange(conn.GetSchema("Tables").AsEnumerable().Select(dr => dr.Field<string>(2)).ToArray());
                 adapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
                 foreach (var tableName in Tables)
                 {
@@ -83,26 +80,23 @@ namespace SimpleEntityFramework.Domain.Objects
                         Logger.Error($"Invalid column name in table {name}.");
                         continue;
                     }
-                    _entities.Add(entity);
+                    Entities.Add(entity);
                 }
             }
 
-            _projects = new List<IProjectTemplate>();
+            var frameworkProject = new FrameworkProjectTemplate(this);
+            var entityProject = new EntityProjectTemplate(this);
             {
-                var frameworkProject = new FrameworkProjectTemplate(this);
-                var entityProject = new EntityProjectTemplate(this);
-                {
-                    entityProject.RefProjects.Add(frameworkProject);
-                }
-                var reposProject = new ReposProjectTemplate(this);
-                {
-                    reposProject.RefProjects.Add(frameworkProject);
-                    reposProject.RefProjects.Add(entityProject);
-                }
-                _projects.Add(frameworkProject);
-                _projects.Add(entityProject);
-                _projects.Add(reposProject);
+                entityProject.RefProjects.Add(frameworkProject);
             }
+            var reposProject = new ReposProjectTemplate(this);
+            {
+                reposProject.RefProjects.Add(frameworkProject);
+                reposProject.RefProjects.Add(entityProject);
+            }
+            Projects.Add(frameworkProject);
+            Projects.Add(entityProject);
+            Projects.Add(reposProject);
         }
 
         public void Build()
