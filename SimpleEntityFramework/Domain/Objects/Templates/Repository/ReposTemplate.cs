@@ -1,4 +1,5 @@
 ﻿using SimpleEntityFramework.Domain.Roles.Schemas;
+using SimpleEntityFramework.Domain.Roles.Templates;
 using System;
 using System.Linq;
 
@@ -7,12 +8,12 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
     public class ReposTemplate : ClassTemplate
     {
         public override string Name => $"{Entity.Name}Repository";
-
-        public ReposTemplate(IEntitySchema entity)
+        
+        public ReposTemplate(IProjectTemplate project, IEntitySchema entity) : base(project)
         {
             Entity = entity;
         }
-        
+
         public IEntitySchema Entity { get; }
 
         public override string FileContent => $@"{Profile}

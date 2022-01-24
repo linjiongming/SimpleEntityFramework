@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SimpleEntityFramework.Domain.Roles.Templates;
 
 namespace SimpleEntityFramework.Domain.Objects.Templates.Framework
 {
     public class RuntimeExtensionsTemplate : ClassTemplate
     {
         public const string ClassName = "RuntimeExtensions";
+
+        public RuntimeExtensionsTemplate(IProjectTemplate project) : base(project)
+        {
+        }
 
         public override string Name => ClassName;
 
@@ -23,9 +28,9 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace {Generator.NamespaceRoot}
+namespace {Builder.NamespaceRoot}
 {{
-    public static class {Generator.NamespaceRoot}_{Project.Name}_{Name}
+    public static class {Builder.NamespaceRoot}_{Project.Name}_{Name}
     {{
         public static T GetField<T>(this DataRow dr, string field)
         {{

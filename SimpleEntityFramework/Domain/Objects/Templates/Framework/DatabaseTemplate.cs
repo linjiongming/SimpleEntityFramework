@@ -1,8 +1,14 @@
-﻿namespace SimpleEntityFramework.Domain.Objects.Templates.Framework
+﻿using SimpleEntityFramework.Domain.Roles.Templates;
+
+namespace SimpleEntityFramework.Domain.Objects.Templates.Framework
 {
     public class DatabaseTemplate : ClassTemplate
     {
         public const string ClassName = "Database";
+
+        public DatabaseTemplate(IProjectTemplate project) : base(project)
+        {
+        }
 
         public override string Name => ClassName;
         

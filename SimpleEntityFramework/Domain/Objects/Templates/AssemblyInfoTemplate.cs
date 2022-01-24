@@ -11,11 +11,12 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
         public AssemblyInfoTemplate(IProjectTemplate project)
         {
             _project = project;
+            Builder = project.Builder;
         }
 
-        public override string Namespace => $"{Generator.NamespaceRoot}.{_project.Name}";
+        public override string Namespace => $"{Builder.NamespaceRoot}.{_project.Name}";
 
-        public override string FolderPath => Path.Combine(Generator.OutputFolder, Namespace, "Properties");
+        public override string FolderPath => Path.Combine(Builder.OutputFolder, Namespace, "Properties");
 
         public override string FileName => "AssemblyInfo.cs";
 

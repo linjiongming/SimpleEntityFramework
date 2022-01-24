@@ -1,4 +1,5 @@
 ﻿using SimpleEntityFramework.Domain.Objects.Templates;
+using SimpleEntityFramework.Domain.Roles.Templates;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,10 @@ namespace SimpleEntityFramework.Domain.Objects.Templates.Framework
     public class EntityMapperTemplate : ClassTemplate
     {
         public const string ClassName = "EntityMapper";
+
+        public EntityMapperTemplate(IProjectTemplate project) : base(project)
+        {
+        }
 
         public override string Name => ClassName;
 

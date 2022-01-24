@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SimpleEntityFramework.Domain.Roles.Templates;
 
 namespace SimpleEntityFramework.Domain.Objects.Templates.Framework
 {
     public class ExpressionVisitorTemplate : ClassTemplate
     {
         public const string ClassName = "ExpressionVisitor";
+
+        public ExpressionVisitorTemplate(IProjectTemplate project) : base(project)
+        {
+        }
 
         public override string Name => ClassName;
 

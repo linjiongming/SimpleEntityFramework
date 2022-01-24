@@ -1,8 +1,14 @@
-﻿namespace SimpleEntityFramework.Domain.Objects.Templates
+﻿using SimpleEntityFramework.Domain.Roles.Templates;
+
+namespace SimpleEntityFramework.Domain.Objects.Templates
 {
     public class BaseEntityTemplate : ClassTemplate
     {
         public const string ClassName = "BaseEntity";
+
+        public BaseEntityTemplate(IProjectTemplate project) : base(project)
+        {
+        }
 
         public override string Name => ClassName;
         

@@ -1,5 +1,6 @@
 ﻿using SimpleEntityFramework.Domain.Objects.Schemas;
 using SimpleEntityFramework.Domain.Roles.Schemas;
+using SimpleEntityFramework.Domain.Roles.Templates;
 using System;
 using System.Linq;
 
@@ -9,13 +10,13 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
     {
         public override string Name => Entity.Name;
 
-        public EntityTemplate(IEntitySchema entity)
+        public EntityTemplate(IProjectTemplate project, IEntitySchema entity) : base(project)
         {
             Entity = entity;
         }
-        
+
         public IEntitySchema Entity { get; set; }
-        
+
         public override string FileContent => $@"{Profile}
 using System;
 using System.ComponentModel;

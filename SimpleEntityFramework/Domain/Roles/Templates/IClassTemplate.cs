@@ -9,6 +9,6 @@ namespace SimpleEntityFramework.Domain.Roles.Templates
     public interface IClassTemplate : ITemplate
     {
         string Name { get; }
-        IProjectTemplate Project { get; set; }
+        IProjectTemplate Project { get; }
     }
 }

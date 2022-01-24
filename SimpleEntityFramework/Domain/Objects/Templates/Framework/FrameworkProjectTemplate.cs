@@ -1,5 +1,6 @@
 ﻿using SimpleEntityFramework.Domain.Objects.Schemas;
 using SimpleEntityFramework.Domain.Objects.Templates.Framework;
+using SimpleEntityFramework.Domain.Roles;
 using SimpleEntityFramework.Domain.Roles.Templates;
 using System;
 using System.Collections.Generic;
@@ -11,21 +12,21 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
     {
         public const string ProjectName = "Framework";
 
-        public FrameworkProjectTemplate() : base(ProjectName)
+        public override string Name => ProjectName;
+
+        public FrameworkProjectTemplate(ISefBuilder gear) : base(gear)
         {
-            this.AddClasses(
-                    new DatabaseTemplate(),
-                    new EntityMapperTemplate(),
-                    new ExpressionVisitorTemplate(),
-                    new HttpHelperTemplate(),
-                    new JsonHelperTemplate(),
-                    new LoggerTemplate(),
-                    new RuntimeExtensionsTemplate())
-                .AddRefDlls(DefaultRefDlls)
-                .AddRefDlls(
-                    "System.Configuration",
-                    "System.Transactions",
-                    "System.Web.Extensions");
+            RefDlls.AddRange(DefaultRefDlls);
+            RefDlls.Add("System.Configuration");
+            RefDlls.Add("System.Transactions");
+            RefDlls.Add("System.Web.Extensions");
+            CompileItems.Add(new DatabaseTemplate(this));
+            CompileItems.Add(new EntityMapperTemplate(this));
+            CompileItems.Add(new ExpressionVisitorTemplate(this));
+            CompileItems.Add(new HttpHelperTemplate(this));
+            CompileItems.Add(new JsonHelperTemplate(this));
+            CompileItems.Add(new LoggerTemplate(this));
+            CompileItems.Add(new RuntimeExtensionsTemplate(this));
         }
     }
 }

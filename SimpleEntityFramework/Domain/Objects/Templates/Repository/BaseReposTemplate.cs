@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Linq;
+using SimpleEntityFramework.Domain.Roles.Templates;
 
 namespace SimpleEntityFramework.Domain.Objects.Templates
 {
     public class BaseReposTemplate : ClassTemplate
     {
         public const string ClassName = "BaseRepository";
+
+        public BaseReposTemplate(IProjectTemplate project) : base(project)
+        {
+        }
 
         public override string Name => ClassName;
 

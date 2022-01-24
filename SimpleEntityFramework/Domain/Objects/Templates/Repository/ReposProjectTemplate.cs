@@ -1,4 +1,5 @@
 ﻿using SimpleEntityFramework.Domain.Objects.Schemas;
+using SimpleEntityFramework.Domain.Roles;
 using SimpleEntityFramework.Domain.Roles.Templates;
 using System;
 using System.Collections.Generic;
@@ -10,14 +11,15 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
     {
         public const string ProjectName = "Repository";
 
-        public ReposProjectTemplate() : base(ProjectName)
+        public override string Name => ProjectName;
+
+        public ReposProjectTemplate(ISefBuilder gear) : base(gear)
         {
-            this.AddClasses(new BaseReposTemplate())
-                .AddClasses(Generator.Entities.Select(x => new ReposTemplate(x)).ToArray())
-                .AddRefDlls(DefaultRefDlls)
-                .AddRefDlls(
-                    "System.Configuration",
-                    "System.Transactions");
+            RefDlls.AddRange(DefaultRefDlls);
+            RefDlls.Add("System.Configuration");
+            RefDlls.Add("System.Transactions");
+            CompileItems.Add(new BaseReposTemplate(this));
+            CompileItems.AddRange(Builder.Entities.Select(x => new ReposTemplate(this, x)).ToArray());
         }
     }
 }

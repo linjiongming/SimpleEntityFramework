@@ -1,4 +1,5 @@
 ﻿using SimpleEntityFramework.Domain.Objects.Schemas;
+using SimpleEntityFramework.Domain.Roles;
 using SimpleEntityFramework.Domain.Roles.Templates;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,14 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
     {
         public const string ProjectName = "Entity";
 
-        public EntityProjectTemplate() : base(ProjectName)
+        public override string Name => ProjectName;
+
+        public EntityProjectTemplate(ISefBuilder gear) : base(gear)
         {
-            this.AddClasses(new EntityInterfaceTemplate(), new BaseEntityTemplate())
-                .AddClasses(Generator.Entities.Select(x => new EntityTemplate(x)).ToArray())
-                .AddRefDlls(DefaultRefDlls);
+            RefDlls.AddRange(DefaultRefDlls);
+            CompileItems.Add(new EntityInterfaceTemplate(this));
+            CompileItems.Add(new BaseEntityTemplate(this));
+            CompileItems.AddRange(Builder.Entities.Select(x => new EntityTemplate(this, x)).ToArray());
         }
     }
 }

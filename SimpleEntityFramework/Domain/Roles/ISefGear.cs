@@ -8,17 +8,14 @@ using System.Threading.Tasks;
 
 namespace SimpleEntityFramework.Domain.Roles
 {
-    public interface ISefGenerator
+    public interface ISefBuilder
     {
         string NamespaceRoot { get; set; }
         string OutputFolder { get; set; }
         Database Database { get; set; }
-        string DatabaseName { get; set; }
-        List<string> TableNames { get; set; }
-        List<IEntitySchema> Entities { get; set; }
-        List<IProjectTemplate> Projects { get; set; }
-        ISefGenerator LoadEntities();
-        ISefGenerator AddProjects(params IProjectTemplate[] projects);
-        void Generate();
+        List<string> Tables { get; }
+        List<IEntitySchema> Entities { get; }
+        List<IProjectTemplate> Projects { get; }
+        void Build();
     }
 }

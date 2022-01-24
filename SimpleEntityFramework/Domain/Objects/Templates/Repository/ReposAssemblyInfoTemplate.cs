@@ -12,9 +12,9 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
             _reposProjectTemplate = reposProjectTemplate;
         }
 
-        public override string Namespace => $"{Generator.NamespaceRoot}.Repository";
+        public override string Namespace => $"{Builder.NamespaceRoot}.Repository";
 
-        public override string FolderPath => Path.Combine(Generator.OutputFolder, Namespace, "Properties");
+        public override string FolderPath => Path.Combine(Builder.OutputFolder, Namespace, "Properties");
 
         public override string FileName => "AssemblyInfo.cs";
 

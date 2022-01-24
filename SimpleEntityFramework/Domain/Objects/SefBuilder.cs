@@ -12,51 +12,46 @@ using System.Text.RegularExpressions;
 
 namespace SimpleEntityFramework.Domain.Objects
 {
-    public class SefGenerator : ISefGenerator
+    public class SefBuilder : ISefBuilder
     {
-        public const string OutputFolderName = "Output";
+        private List<string> _tables;
+        private List<IEntitySchema> _entities;
+        private List<IProjectTemplate> _projects;
 
         public string NamespaceRoot { get; set; }
         public string OutputFolder { get; set; }
         public Database Database { get; set; }
-        public string DatabaseName { get; set; }
-        public List<string> TableNames { get; set; }
-        public List<IEntitySchema> Entities { get; set; }
-        public List<IProjectTemplate> Projects { get; set; }
 
-        public static SefGenerator Current { get; private set; }
+        public List<string> Tables => _tables;
+        public List<IEntitySchema> Entities => _entities;
+        public List<IProjectTemplate> Projects => _projects;
 
-        public SefGenerator(string namespaceRoot, Database database)
+        public SefBuilder()
         {
-            Current = this;
-            NamespaceRoot = namespaceRoot;
-            OutputFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, OutputFolderName);
+            NamespaceRoot = "My";
+            Database = new Database() { ProviderName = "System.Data.SqlClient" };
+            OutputFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Output");
+        }
+
+        private void Prepare()
+        {
             if (!Directory.Exists(OutputFolder))
             {
                 Directory.CreateDirectory(OutputFolder);
             }
 
-            Database = database;
-            using (var conn = Database.OpenConnection())
+            if (string.IsNullOrWhiteSpace(Database.ConnectionString))
             {
-                var dt = conn.GetSchema("Tables");
-                var rows = dt.Rows.Cast<DataRow>();
-                DatabaseName = rows.FirstOrDefault()?.Field<string>(0);
-                TableNames = rows.Select(dr => dr.Field<string>(2)).ToList();
+                Database = Database.GetDefault();
             }
 
-            Entities = new List<IEntitySchema>();
-
-            Projects = new List<IProjectTemplate>();
-        }
-
-        public ISefGenerator LoadEntities()
-        {
+            _entities = new List<IEntitySchema>();
             using (var adapter = Database.CreateDataAdapter())
             using (var conn = Database.OpenConnection())
             {
+                _tables = conn.GetSchema("Tables").AsEnumerable().Select(dr => dr.Field<string>(2)).ToList();
                 adapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
-                foreach (var tableName in TableNames)
+                foreach (var tableName in Tables)
                 {
                     var name = Database.GetTableName(tableName);
                     Logger.Info($"The schema of table {name} is loading...");
@@ -88,24 +83,31 @@ namespace SimpleEntityFramework.Domain.Objects
                         Logger.Error($"Invalid column name in table {name}.");
                         continue;
                     }
-                    Entities.Add(entity);
+                    _entities.Add(entity);
                 }
             }
-            return this;
-        }
-        
-        public ISefGenerator AddProjects(params IProjectTemplate[] projects)
-        {
-            foreach (var project in projects)
+
+            _projects = new List<IProjectTemplate>();
             {
-                project.AddRefProjets(Projects.ToArray());
+                var frameworkProject = new FrameworkProjectTemplate(this);
+                var entityProject = new EntityProjectTemplate(this);
+                {
+                    entityProject.RefProjects.Add(frameworkProject);
+                }
+                var reposProject = new ReposProjectTemplate(this);
+                {
+                    reposProject.RefProjects.Add(frameworkProject);
+                    reposProject.RefProjects.Add(entityProject);
+                }
+                _projects.Add(frameworkProject);
+                _projects.Add(entityProject);
+                _projects.Add(reposProject);
             }
-            Projects.AddRange(projects);
-            return this;
         }
 
-        public void Generate()
+        public void Build()
         {
+            Prepare();
             Projects.ForEach(x => x.Generate());
             Logger.Info("All codes have been generated successfully.");
             System.Diagnostics.Process.Start("explorer.exe", OutputFolder);

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SimpleEntityFramework.Domain.Objects.Templates
 {
-    public class ProjectTemplate : BaseTemplate, IProjectTemplate
+    public abstract class ProjectTemplate : BaseTemplate, IProjectTemplate
     {
         public static readonly string[] DefaultRefDlls = new string[]
         {
@@ -25,24 +25,24 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
 
         private readonly AssemblyInfoTemplate _assemblyInfo;
 
-        public ProjectTemplate(string name)
+        public ProjectTemplate(ISefBuilder gear)
         {
+            Builder = gear;
             ID = Guid.NewGuid();
-            Name = name;
             _assemblyInfo = new AssemblyInfoTemplate(this);
         }
-        
+
         public Guid ID { get; }
 
-        public string Name { get; set; }
+        public abstract string Name { get; }
 
-        public List<string> RefDlls { get; set; } = new List<string>();
+        public List<string> RefDlls { get; } = new List<string>();
 
-        public List<ITemplate> CompileItems { get; set; } = new List<ITemplate>();
+        public List<ITemplate> CompileItems { get; } = new List<ITemplate>();
 
-        public List<IProjectTemplate> RefProjects { get; set; } = new List<IProjectTemplate>();
+        public List<IProjectTemplate> RefProjects { get; } = new List<IProjectTemplate>();
 
-        public override string Namespace => $"{Generator.NamespaceRoot}.{Name}";
+        public override string Namespace => $"{Builder.NamespaceRoot}.{Name}";
 
         public override string FileName => $"{Namespace}.csproj";
 
@@ -95,49 +95,17 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
 
         public override void Generate()
         {
+            Sort();
             base.Generate();
             _assemblyInfo.Generate();
             CompileItems.ForEach(x => x.Generate());
         }
-
-        public IProjectTemplate AddRefDlls(params string[] dlls)
+        
+        private void Sort()
         {
-            foreach (var dll in dlls)
-            {
-                if (!RefDlls.Contains(dll))
-                {
-                    RefDlls.Add(dll);
-                }
-            }
-            RefDlls = RefDlls.OrderBy(x => x).ToList();
-            return this;
-        }
-
-        public IProjectTemplate AddClasses(params IClassTemplate[] classess)
-        {
-            foreach (var item in classess)
-            {
-                if (!CompileItems.Contains(item))
-                {
-                    item.Project = this;
-                    CompileItems.Add(item);
-                }
-            }
-            CompileItems = CompileItems.OrderBy(x => x.FilePath).ToList();
-            return this;
-        }
-
-        public IProjectTemplate AddRefProjets(params IProjectTemplate[] projects)
-        {
-            foreach (var project in projects)
-            {
-                if (!RefProjects.Contains(project))
-                {
-                    RefProjects.Add(project);
-                }
-            }
-            RefProjects = RefProjects.OrderBy(x => x.Name).ToList();
-            return this;
+            RefDlls.Sort();
+            CompileItems.Sort((left, right) => string.Compare(left.FilePath, right.FilePath));
+            RefProjects.Sort((left, right) => string.Compare(left.Name, right.Name));
         }
     }
 }
