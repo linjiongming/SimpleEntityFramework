@@ -43,6 +43,13 @@ namespace SimpleEntityFramework.Domain.Objects
                 Database = Database.GetDefault();
             }
 
+            LoadSchemas();
+
+            LoadProjects();
+        }
+
+        private void LoadSchemas()
+        {
             using (var adapter = Database.CreateDataAdapter())
             using (var conn = Database.OpenConnection())
             {
@@ -83,7 +90,10 @@ namespace SimpleEntityFramework.Domain.Objects
                     Entities.Add(entity);
                 }
             }
+        }
 
+        private void LoadProjects()
+        {
             var frameworkProject = new FrameworkProjectTemplate(this);
             var entityProject = new EntityProjectTemplate(this);
             {
@@ -104,7 +114,7 @@ namespace SimpleEntityFramework.Domain.Objects
             Prepare();
             Projects.ForEach(x => x.Generate());
             Logger.Info("All codes have been generated successfully.");
-            System.Diagnostics.Process.Start("explorer.exe", OutputFolder);
+            System.Diagnostics.Process.Start("explorer", OutputFolder);
         }
     }
 }
