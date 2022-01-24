@@ -25,9 +25,8 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
 
         private readonly AssemblyInfoTemplate _assemblyInfo;
 
-        public ProjectTemplate(ISefBuilder builder)
+        public ProjectTemplate(ISefBuilder builder) : base(builder)
         {
-            Builder = builder;
             ID = Guid.NewGuid();
             _assemblyInfo = new AssemblyInfoTemplate(this);
         }
@@ -100,7 +99,7 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
             _assemblyInfo.Generate();
             CompileItems.ForEach(x => x.Generate());
         }
-        
+
         private void Sort()
         {
             RefDlls.Sort();

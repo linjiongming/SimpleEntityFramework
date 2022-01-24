@@ -5,7 +5,7 @@ namespace SimpleEntityFramework.Domain.Roles.Templates
 {
     public interface ITemplate
     {
-        ISefBuilder Builder { get; set; }
+        ISefBuilder Builder { get; }
         string Namespace { get; }
         string FolderPath { get; }
         string FileName { get; }

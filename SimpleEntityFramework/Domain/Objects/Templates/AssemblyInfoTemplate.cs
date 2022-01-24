@@ -8,10 +8,9 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
     {
         private readonly IProjectTemplate _project;
 
-        public AssemblyInfoTemplate(IProjectTemplate project)
+        public AssemblyInfoTemplate(IProjectTemplate project) : base(project.Builder)
         {
             _project = project;
-            Builder = project.Builder;
         }
 
         public override string Namespace => $"{Builder.NamespaceRoot}.{_project.Name}";

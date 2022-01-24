@@ -10,14 +10,12 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
 {
     public abstract class ClassTemplate : BaseTemplate, IClassTemplate
     {
-        public ClassTemplate(IProjectTemplate project)
+        public ClassTemplate(IProjectTemplate project) : base(project.Builder)
         {
             Project = project;
         }
 
         public IProjectTemplate Project { get; }
-
-        public override ISefBuilder Builder { get => Project.Builder; set => Project.Builder = value; }
 
         public abstract string Name { get; }
 
