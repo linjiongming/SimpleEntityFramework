@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.CommandLineUtils;
 using SimpleEntityFramework.Domain.Objects;
-using SimpleEntityFramework.Domain.Objects.Templates;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
