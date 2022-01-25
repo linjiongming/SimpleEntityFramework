@@ -17,23 +17,23 @@ namespace SimpleEntityFramework
             var cla = new CommandLineApplication();
             {
                 cla.Name = "Simple Entity Framework Command Line Interface";
-                cla.Description = "Automatically generate CRUD code similar to EF." + Environment.NewLine + DbProviderMapping.Description;
+                cla.Description = "Automatically generate CRUD code similar to EF.";
                 cla.HelpOption("-? | -h | --help");
             }
 
-            var c = cla.Option("-c | --connection <ConnectionString>", "Connection String", CommandOptionType.SingleValue);
-            var p = cla.Option("-p | --provider <ProviderName>", "Database Provider (Default \"System.Data.SqlClient\")", CommandOptionType.SingleValue);
             var r = cla.Option("-r | --root <NamespaceRoot>", "Namespace Root (Default \"My\")", CommandOptionType.SingleValue);
             var o = cla.Option("-o | --output <OutputFolder>", "Output Directory (Default \"[BaseDirectory]\\Output\")", CommandOptionType.SingleValue);
+            var c = cla.Option("-c | --connection <ConnectionString>", "Connection String", CommandOptionType.SingleValue);
+            var p = cla.Option("-p | --provider <ProviderName>", $"Database Provider (Default \"Sql\"){DbProviderMapping.Description}", CommandOptionType.SingleValue);
 
             cla.OnExecute(() =>
             {
                 var builder = new SefBuilder();
                 {
-                    builder.ConnectionString = c.Value();
-                    builder.ProviderFactory = DbProviderMapping.GetFactory(p.Value());
                     builder.NamespaceRoot = r.Value();
                     builder.OutputFolder = o.Value();
+                    builder.ConnectionString = c.Value();
+                    builder.ProviderFactory = DbProviderMapping.GetFactory(p.Value());
                     builder.Build();
                 }
                 return 0;

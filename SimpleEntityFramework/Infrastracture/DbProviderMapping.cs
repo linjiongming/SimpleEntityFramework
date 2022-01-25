@@ -19,7 +19,7 @@ namespace SimpleEntityFramework.Infrastracture
         };
 
         private static string _description;
-        public static string Description => _description ?? (_description = string.Join(Environment.NewLine, _factories.Select(x => $"{x.Key}: {x.Value.Value.GetType().FullName}")));
+        public static string Description => _description ?? (_description = $"\r\n\tDatabase Providers:{string.Concat(_factories.Select(x => $"\r\n\t\t{x.Key}:\t{x.Value.Value.GetType().Namespace}"))}");
 
         public static DbProviderFactory GetFactory(string key)
         {
