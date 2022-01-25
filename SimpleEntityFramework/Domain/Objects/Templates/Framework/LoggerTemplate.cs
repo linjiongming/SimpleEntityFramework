@@ -31,7 +31,7 @@ namespace {Namespace}
     public class {Name}
     {{
         private static readonly Lazy<{Name}> _lazy = new Lazy<{Name}>(() => new {Name}(), true);
-        private static readonly LogLevel _logLevel = ConfigurationManager.AppSettings.GetEnumValue(""LogLevel"", LogLevel.All);
+        private static readonly LogLevel _logLevel = (LogLevel)Enum.Parse(typeof(LogLevel), ConfigurationManager.AppSettings.Get(""LogLevel"") ?? ""All"", true);
         private static readonly Dictionary<int, string> _threadDirectory = new Dictionary<int, string>();
 
         public static {Name} Instance => _lazy.Value;
@@ -107,13 +107,13 @@ namespace {Namespace}
                 {{
                     formatted += $""[{{DateTime.Now:yyyy-MM-dd HH:mm:ss}}]"";
                 }}
-                formatted += formatted.IsEmpty() ? content : ("": "" + content); // 日志主体
+                formatted += string.IsNullOrWhiteSpace(formatted) ? content : ("": "" + content); // 日志主体
                 if (stackTrace > 0)
                 {{
                     var method = new StackTrace(true).GetFrame(stackTrace).GetMethod();
                     formatted += $""-[{{method.ReflectedType.Name}}.{{method.Name}}]"";
                 }}
-                if (CurrentThreadTag.IsNotEmpty())
+                if (!string.IsNullOrWhiteSpace(CurrentThreadTag))
                 {{
                     formatted += $""-[{{CurrentThreadTag}}]"";
                 }}
