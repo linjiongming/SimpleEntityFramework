@@ -1,5 +1,6 @@
 ﻿using SimpleEntityFramework.Domain.Roles;
 using SimpleEntityFramework.Domain.Roles.Templates;
+using SimpleEntityFramework.Infrastracture;
 using System;
 using System.IO;
 

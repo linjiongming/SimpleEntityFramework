@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.CommandLineUtils;
 using SimpleEntityFramework.Domain.Objects;
+using SimpleEntityFramework.Infrastracture;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,26 +17,23 @@ namespace SimpleEntityFramework
             var cla = new CommandLineApplication();
             {
                 cla.Name = "Simple Entity Framework Command Line Interface";
-                cla.Description = "Automatically generate CRUD code similar to EF.";
+                cla.Description = "Automatically generate CRUD code similar to EF." + Environment.NewLine + DbProviderMapping.Description;
                 cla.HelpOption("-? | -h | --help");
             }
 
-            var r = cla.Option("-r | --root <NamespaceRoot>", "Namespace Root (Default \"My\")", CommandOptionType.SingleValue);
             var c = cla.Option("-c | --connection <ConnectionString>", "Connection String", CommandOptionType.SingleValue);
             var p = cla.Option("-p | --provider <ProviderName>", "Database Provider (Default \"System.Data.SqlClient\")", CommandOptionType.SingleValue);
+            var r = cla.Option("-r | --root <NamespaceRoot>", "Namespace Root (Default \"My\")", CommandOptionType.SingleValue);
             var o = cla.Option("-o | --output <OutputFolder>", "Output Directory (Default \"[BaseDirectory]\\Output\")", CommandOptionType.SingleValue);
 
             cla.OnExecute(() =>
             {
                 var builder = new SefBuilder();
                 {
-                    builder.NamespaceRoot = r.Value() ?? "My";
-                    builder.Database = new Database()
-                    {
-                        ProviderName = p.Value() ?? "System.Data.SqlClient",
-                        ConnectionString = c.Value()
-                    };
-                    builder.OutputFolder = o.Value() ?? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Output");
+                    builder.ConnectionString = c.Value();
+                    builder.ProviderFactory = DbProviderMapping.GetFactory(p.Value());
+                    builder.NamespaceRoot = r.Value();
+                    builder.OutputFolder = o.Value();
                     builder.Build();
                 }
                 return 0;
