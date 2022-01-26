@@ -15,7 +15,7 @@ namespace SimpleEntityFramework.Domain.Roles
         DbProviderFactory ProviderFactory { get; set; }
         string NamespaceRoot { get; set; }
         string OutputFolder { get; set; }
-        List<string> Tables { get; }
+        List<string> TableNames { get; }
         List<IEntitySchema> Entities { get; }
         List<IProjectTemplate> Projects { get; }
         void Build();

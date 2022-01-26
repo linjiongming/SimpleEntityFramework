@@ -1,5 +1,6 @@
 ﻿using SimpleEntityFramework.Domain.Objects.Schemas;
 using SimpleEntityFramework.Domain.Objects.Templates;
+using SimpleEntityFramework.Domain.Objects.Templates.Entity;
 using SimpleEntityFramework.Domain.Roles;
 using SimpleEntityFramework.Domain.Roles.Schemas;
 using SimpleEntityFramework.Domain.Roles.Templates;
@@ -10,6 +11,8 @@ using System.Data;
 using System.Data.Common;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace SimpleEntityFramework.Domain.Objects
@@ -20,24 +23,16 @@ namespace SimpleEntityFramework.Domain.Objects
         public DbProviderFactory ProviderFactory { get; set; }
         public string NamespaceRoot { get; set; }
         public string OutputFolder { get; set; }
-        public List<string> Tables { get; }
+        public string OnlyTable { get; set; }
+        public List<string> TableNames { get; }
         public List<IEntitySchema> Entities { get; }
         public List<IProjectTemplate> Projects { get; }
 
         public SefBuilder()
         {
-            Tables = new List<string>();
+            TableNames = new List<string>();
             Entities = new List<IEntitySchema>();
             Projects = new List<IProjectTemplate>();
-        }
-
-        private void Prepare()
-        {
-            CheckInput();
-
-            LoadSchemas();
-
-            LoadProjects();
         }
 
         private void CheckInput()
@@ -71,20 +66,20 @@ namespace SimpleEntityFramework.Domain.Objects
             {
                 conn.ConnectionString = ConnectionString;
                 conn.Open();
-                Tables.AddRange(conn.GetSchema("Tables").AsEnumerable().Select(dr => dr.Field<string>(2)).ToArray());
+                TableNames.AddRange(conn.GetSchema("Tables").AsEnumerable().Select(dr => dr.Field<string>(2)).ToArray());
                 adapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
-                foreach (var tableName in Tables)
+                foreach (var tableName in TableNames)
                 {
-                    var name = GetTableName(tableName);
-                    Logger.Info($"The schema of table {name} is loading...");
+                    var escapTableName = EscapeTableName(tableName);
+                    Logger.Info($"The schema of table {escapTableName} is loading...");
                     var entity = new EntitySchema(tableName);
-                    var table = new DataTable();
+                    var schemaTable = new DataTable();
                     var command = ProviderFactory.CreateCommand();
                     command.Connection = conn;
-                    command.CommandText = $"SELECT * FROM {name}";
+                    command.CommandText = $"SELECT * FROM {escapTableName}";
                     adapter.SelectCommand = command;
-                    adapter.FillSchema(table, SchemaType.Source);
-                    foreach (DataColumn col in table.Columns)
+                    adapter.FillSchema(schemaTable, SchemaType.Source);
+                    foreach (DataColumn col in schemaTable.Columns)
                     {
                         var prop = new PropertySchema
                         {
@@ -93,18 +88,18 @@ namespace SimpleEntityFramework.Domain.Objects
                             IsIdentity = col.AutoIncrement,
                             IsNullable = col.AllowDBNull,
                             Length = col.MaxLength,
-                            PrimaryKey = table.PrimaryKey != null && table.PrimaryKey.Length > 0 ? table.PrimaryKey.Contains(col) : (col.AutoIncrement || col.Unique),
+                            PrimaryKey = schemaTable.PrimaryKey != null && schemaTable.PrimaryKey.Length > 0 ? schemaTable.PrimaryKey.Contains(col) : (col.AutoIncrement || col.Unique),
                         };
                         entity.Properties.Add(prop);
                     }
                     if (!entity.Properties.Any(x => x.PrimaryKey))
                     {
-                        Logger.Error($"Cannot find any key in table {name}.");
+                        Logger.Error($"Cannot find any key in table {escapTableName}.");
                         continue;
                     }
                     if (entity.Properties.Any(x => !Regex.Match(x.Name, @"\w[\w,\d,_]*").Success))
                     {
-                        Logger.Error($"Invalid column name in table {name}.");
+                        Logger.Error($"Invalid column name in table {escapTableName}.");
                         continue;
                     }
                     Entities.Add(entity);
@@ -112,7 +107,45 @@ namespace SimpleEntityFramework.Domain.Objects
             }
         }
 
-        private string GetTableName(string tableName)
+        private EntitySchema GetSingleEntity()
+        {
+            if (!string.IsNullOrWhiteSpace(OnlyTable))
+            {
+                using (var adapter = ProviderFactory.CreateDataAdapter())
+                using (var conn = ProviderFactory.CreateConnection())
+                {
+                    conn.ConnectionString = ConnectionString;
+                    conn.Open();
+                    adapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
+                    var escapTableName = EscapeTableName(OnlyTable);
+                    Logger.Info($"The schema of table {escapTableName} is loading...");
+                    var entity = new EntitySchema(OnlyTable);
+                    var schemaTable = new DataTable();
+                    var command = ProviderFactory.CreateCommand();
+                    command.Connection = conn;
+                    command.CommandText = $"SELECT * FROM {escapTableName}";
+                    adapter.SelectCommand = command;
+                    adapter.FillSchema(schemaTable, SchemaType.Source);
+                    foreach (DataColumn col in schemaTable.Columns)
+                    {
+                        var prop = new PropertySchema
+                        {
+                            Name = col.ColumnName,
+                            DataType = col.DataType,
+                            IsIdentity = col.AutoIncrement,
+                            IsNullable = col.AllowDBNull,
+                            Length = col.MaxLength,
+                            PrimaryKey = schemaTable.PrimaryKey != null && schemaTable.PrimaryKey.Length > 0 ? schemaTable.PrimaryKey.Contains(col) : (col.AutoIncrement || col.Unique),
+                        };
+                        entity.Properties.Add(prop);
+                    }
+                    return entity;
+                }
+            }
+            return null;
+        }
+
+        private string EscapeTableName(string tableName)
         {
             if (ProviderFactory.GetType().Name.Contains("MySql"))
             {
@@ -143,7 +176,28 @@ namespace SimpleEntityFramework.Domain.Objects
 
         public void Build()
         {
-            Prepare();
+            CheckInput();
+
+            if (string.IsNullOrWhiteSpace(OnlyTable))
+                BuildAll();
+            else
+                BuildSingle();
+        }
+
+        private void BuildSingle()
+        {
+            var template = new SingleEntityTemplate(this, GetSingleEntity());
+            var content = template.FileContent;
+            Logger.Info(content);
+            Clipboard.SetText(content);
+            Logger.Info("All codes have been copied to clipboard.");
+            Console.ReadLine();
+        }
+
+        private void BuildAll()
+        {
+            LoadSchemas();
+            LoadProjects();
             Projects.ForEach(x => x.Generate());
             Logger.Info("All codes have been generated successfully.");
             System.Diagnostics.Process.Start("explorer", OutputFolder);

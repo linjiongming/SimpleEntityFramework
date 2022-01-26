@@ -63,6 +63,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Objects\Templates\Entity\SingleEntityTemplate.cs" />
+    <Compile Include="Infrastracture\Clipboard.cs" />
     <Compile Include="Infrastracture\DbProviderMapping.cs" />
     <Compile Include="Domain\Objects\Templates\ClassTemplate.cs" />
     <Compile Include="Domain\Objects\Templates\Entity\BaseEntityTemplate.cs" />
