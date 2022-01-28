@@ -63,14 +63,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Objects\Schemas\SchemaBuilder.cs" />
     <Compile Include="Domain\Objects\Templates\Entity\SingleEntityTemplate.cs" />
+    <Compile Include="Domain\Roles\Schemas\ISchemaBuilder.cs" />
     <Compile Include="Infrastracture\Clipboard.cs" />
     <Compile Include="Infrastracture\DbProviderMapping.cs" />
     <Compile Include="Domain\Objects\Templates\ClassTemplate.cs" />
     <Compile Include="Domain\Objects\Templates\Entity\BaseEntityTemplate.cs" />
     <Compile Include="Domain\Objects\Templates\Entity\EntityInterfaceTemplate.cs" />
-    <Compile Include="Domain\Objects\Schemas\EntitySchema.cs" />
-    <Compile Include="Domain\Objects\Schemas\PropertySchema.cs" />
+    <Compile Include="Domain\Objects\Schemas\TableSchema.cs" />
+    <Compile Include="Domain\Objects\Schemas\ColumnSchema.cs" />
     <Compile Include="Domain\Objects\Templates\Framework\EntityMapperTemplate.cs" />
     <Compile Include="Domain\Objects\Templates\Framework\ExpressionVisitorTemplate.cs" />
     <Compile Include="Domain\Objects\Templates\Framework\FrameworkProjectTemplate.cs" />
@@ -81,8 +83,8 @@
     <Compile Include="Domain\Objects\Templates\ProjectTemplate.cs" />
     <Compile Include="Domain\Objects\Templates\AssemblyInfoTemplate.cs" />
     <Compile Include="Domain\Roles\ISefBuilder.cs" />
-    <Compile Include="Domain\Roles\Schemas\IEntitySchema.cs" />
-    <Compile Include="Domain\Roles\Schemas\IPropertySchema.cs" />
+    <Compile Include="Domain\Roles\Schemas\ITableSchema.cs" />
+    <Compile Include="Domain\Roles\Schemas\IColumnSchema.cs" />
     <Compile Include="Domain\Roles\Templates\IClassTemplate.cs" />
     <Compile Include="Infrastracture\CommandLineUtils\AnsiConsole.cs" />
     <Compile Include="Infrastracture\CommandLineUtils\CommandArgument.cs" />

@@ -31,14 +31,14 @@ namespace SimpleEntityFramework.Infrastracture
         /// <param name="text">文本</param>
         public static void SetText(string text)
         {
+            if (!OpenClipboard(IntPtr.Zero))
+            {
+                SetText(text);
+                return;
+            }
+            EmptyClipboard();
             try
             {
-                if (!OpenClipboard(IntPtr.Zero))
-                {
-                    SetText(text);
-                    return;
-                }
-                EmptyClipboard();
                 SetClipboardData(13, Marshal.StringToHGlobalUni(text));
             }
             catch { throw; }

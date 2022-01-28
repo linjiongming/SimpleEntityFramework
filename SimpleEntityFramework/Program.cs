@@ -33,7 +33,7 @@ namespace SimpleEntityFramework
                 {
                     builder.NamespaceRoot = r.Value();
                     builder.OutputFolder = o.Value();
-                    builder.OnlyTable = t.Value();
+                    builder.SingleTable = t.Value();
                     builder.ConnectionString = c.Value();
                     builder.ProviderFactory = DbProviderMapping.GetFactory(p.Value());
                     builder.Build();

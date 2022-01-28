@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace SimpleEntityFramework.Domain.Roles.Schemas
 {
-    public interface IPropertySchema
+    public interface IColumnSchema
     {
         string Name { get; set; }
+        string PropertyName { get; }
         Type DataType { get; set; }
         bool IsNullable { get; set; }
         bool PrimaryKey { get; set; }

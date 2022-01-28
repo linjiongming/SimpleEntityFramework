@@ -15,7 +15,7 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
 
         public override string Namespace => $"{Builder.NamespaceRoot}.{_project.Name}";
 
-        public override string FolderPath => Path.Combine(Builder.OutputFolder, Namespace, "Properties");
+        public override string FolderPath => Path.Combine(Builder.OutputFolder, Namespace, "Columns");
 
         public override string FileName => "AssemblyInfo.cs";
 

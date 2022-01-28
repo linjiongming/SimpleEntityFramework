@@ -19,7 +19,7 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
             RefDlls.Add("System.Configuration");
             RefDlls.Add("System.Transactions");
             CompileItems.Add(new BaseReposTemplate(this));
-            CompileItems.AddRange(Builder.Entities.Select(x => new ReposTemplate(this, x)).ToArray());
+            CompileItems.AddRange(Builder.TableSchemas.Select(x => new ReposTemplate(this, x)).ToArray());
         }
     }
 }

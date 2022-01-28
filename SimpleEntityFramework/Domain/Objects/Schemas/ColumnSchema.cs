@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SimpleEntityFramework.Domain.Objects.Schemas
 {
-    public class PropertySchema: IPropertySchema
+    public class ColumnSchema : IColumnSchema
     {
         public string Name { get; set; }
         public Type DataType { get; set; }
@@ -15,9 +15,14 @@ namespace SimpleEntityFramework.Domain.Objects.Schemas
         public bool PrimaryKey { get; set; }
         public bool IsIdentity { get; set; }
         public int Length { get; set; }
-        public string TypeName => TypeNameOrAlias(DataType) + (IsNullable && DataType.IsValueType ? "?" : "");
 
-        static Dictionary<Type, string> _typeAlias = new Dictionary<Type, string>
+        private string _typeName;
+        public string TypeName => _typeName ?? (_typeName = TypeNameOrAlias(DataType) + (IsNullable && DataType.IsValueType ? "?" : ""));
+
+        private string _propertyName;
+        public string PropertyName => _propertyName ?? (_propertyName = GetPropertyName(Name));
+
+        public static Dictionary<Type, string> TypeAlias = new Dictionary<Type, string>
         {
             { typeof(bool), "bool" },
             { typeof(byte), "byte" },
@@ -37,14 +42,28 @@ namespace SimpleEntityFramework.Domain.Objects.Schemas
             { typeof(void), "object" }
         };
 
-        static string TypeNameOrAlias(Type type)
+        public static string TypeNameOrAlias(Type type)
         {
             // Lookup alias for type
-            if (_typeAlias.TryGetValue(type, out string alias))
+            if (TypeAlias.TryGetValue(type, out string alias))
                 return alias;
 
             // Default to CLR type name
             return type.Name;
+        }
+
+
+        public static readonly string[] ColumnPrefixes = new[] { "c_" };
+
+        public static string GetPropertyName(string columnName)
+        {
+            var propertyName = columnName;
+            var prefix = ColumnPrefixes.FirstOrDefault(x => propertyName.StartsWith(x, StringComparison.CurrentCultureIgnoreCase));
+            if (!string.IsNullOrWhiteSpace(prefix) && propertyName.StartsWith(prefix, StringComparison.CurrentCultureIgnoreCase))
+            {
+                propertyName = propertyName.Substring(prefix.Length);
+            }
+            return string.Concat(propertyName.Split(new[] { '_', ' ', '-' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Substring(0, 1).ToUpper() + x.Substring(1)));
         }
     }
 }

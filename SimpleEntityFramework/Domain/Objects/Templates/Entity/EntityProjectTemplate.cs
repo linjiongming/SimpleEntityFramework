@@ -18,7 +18,7 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
             RefDlls.AddRange(DefaultRefDlls);
             CompileItems.Add(new EntityInterfaceTemplate(this));
             CompileItems.Add(new BaseEntityTemplate(this));
-            CompileItems.AddRange(Builder.Entities.Select(x => new EntityTemplate(this, x)).ToArray());
+            CompileItems.AddRange(Builder.TableSchemas.Select(x => new EntityTemplate(this, x)).ToArray());
         }
     }
 }

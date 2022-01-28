@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace SimpleEntityFramework.Domain.Roles.Schemas
 {
-    public interface IEntitySchema
+    public interface ITableSchema
     {
         string Name { get; set; }
-        List<IPropertySchema> Properties { get; set; }
-        List<IPropertySchema> PrimaryKeys { get; }
+        string EntityName { get; }
+        List<IColumnSchema> Columns { get; set; }
+        List<IColumnSchema> PrimaryKeys { get; }
     }
 }

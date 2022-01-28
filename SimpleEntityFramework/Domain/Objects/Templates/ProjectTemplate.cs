@@ -15,6 +15,7 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
         {
             "Microsoft.CSharp",
             "System",
+            "System.ComponentModel.DataAnnotations",
             "System.Core",
             "System.Data",
             "System.Data.DataSetExtensions",
@@ -53,7 +54,7 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
     <Platform Condition="" '$(Platform)' == '' "">AnyCPU</Platform>
     <ProjectGuid>{{{ID.ToString().ToUpper()}}}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <AppDesignerFolder>Columns</AppDesignerFolder>
     <RootNamespace>{Namespace}</RootNamespace>
     <AssemblyName>{Namespace}</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
