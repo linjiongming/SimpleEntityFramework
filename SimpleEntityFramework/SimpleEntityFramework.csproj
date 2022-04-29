@@ -73,7 +73,7 @@
     <Compile Include="Domain\Objects\Templates\Entity\EntityInterfaceTemplate.cs" />
     <Compile Include="Domain\Objects\Schemas\TableSchema.cs" />
     <Compile Include="Domain\Objects\Schemas\ColumnSchema.cs" />
-    <Compile Include="Domain\Objects\Templates\Framework\EntityMapperTemplate.cs" />
+    <Compile Include="Domain\Objects\Templates\Framework\DataMapperTemplate.cs" />
     <Compile Include="Domain\Objects\Templates\Framework\ExpressionVisitorTemplate.cs" />
     <Compile Include="Domain\Objects\Templates\Framework\FrameworkProjectTemplate.cs" />
     <Compile Include="Domain\Objects\Templates\Framework\HttpHelperTemplate.cs" />

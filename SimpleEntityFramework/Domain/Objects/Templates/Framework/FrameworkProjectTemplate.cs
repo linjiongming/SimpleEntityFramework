@@ -21,7 +21,7 @@ namespace SimpleEntityFramework.Domain.Objects.Templates
             RefDlls.Add("System.Transactions");
             RefDlls.Add("System.Web.Extensions");
             CompileItems.Add(new DatabaseTemplate(this));
-            CompileItems.Add(new EntityMapperTemplate(this));
+            CompileItems.Add(new DataMapperTemplate(this));
             CompileItems.Add(new ExpressionVisitorTemplate(this));
             CompileItems.Add(new HttpHelperTemplate(this));
             CompileItems.Add(new JsonHelperTemplate(this));

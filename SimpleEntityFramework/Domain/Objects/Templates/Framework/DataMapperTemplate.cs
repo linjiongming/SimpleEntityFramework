@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace SimpleEntityFramework.Domain.Objects.Templates.Framework
 {
-    public class EntityMapperTemplate : ClassTemplate
+    public class DataMapperTemplate : ClassTemplate
     {
-        public const string ClassName = "EntityMapper";
+        public const string ClassName = "DataMapper";
 
-        public EntityMapperTemplate(IProjectTemplate project) : base(project)
+        public DataMapperTemplate(IProjectTemplate project) : base(project)
         {
         }
 
@@ -25,8 +25,57 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 
-public static class EntityMapper
+public static class {ClassName}
 {{
+    public static readonly Dictionary<Type, DbType> TypeMap;
+
+    static {ClassName}()
+    {{
+        TypeMap = new Dictionary<Type, DbType>();
+        TypeMap[typeof(byte)] = DbType.Byte;
+        TypeMap[typeof(sbyte)] = DbType.SByte;
+        TypeMap[typeof(short)] = DbType.Int16;
+        TypeMap[typeof(ushort)] = DbType.UInt16;
+        TypeMap[typeof(int)] = DbType.Int32;
+        TypeMap[typeof(uint)] = DbType.UInt32;
+        TypeMap[typeof(long)] = DbType.Int64;
+        TypeMap[typeof(ulong)] = DbType.UInt64;
+        TypeMap[typeof(float)] = DbType.Single;
+        TypeMap[typeof(double)] = DbType.Double;
+        TypeMap[typeof(Decimal)] = DbType.Decimal;
+        TypeMap[typeof(bool)] = DbType.Boolean;
+        TypeMap[typeof(string)] = DbType.String;
+        TypeMap[typeof(char)] = DbType.StringFixedLength;
+        TypeMap[typeof(Guid)] = DbType.Guid;
+        TypeMap[typeof(DateTime)] = DbType.DateTime;
+        TypeMap[typeof(DateTimeOffset)] = DbType.DateTimeOffset;
+        TypeMap[typeof(TimeSpan)] = DbType.Time;
+        TypeMap[typeof(byte[])] = DbType.Binary;
+        TypeMap[typeof(byte?)] = DbType.Byte;
+        TypeMap[typeof(sbyte?)] = DbType.SByte;
+        TypeMap[typeof(short?)] = DbType.Int16;
+        TypeMap[typeof(ushort?)] = DbType.UInt16;
+        TypeMap[typeof(int?)] = DbType.Int32;
+        TypeMap[typeof(uint?)] = DbType.UInt32;
+        TypeMap[typeof(long?)] = DbType.Int64;
+        TypeMap[typeof(ulong?)] = DbType.UInt64;
+        TypeMap[typeof(float?)] = DbType.Single;
+        TypeMap[typeof(double?)] = DbType.Double;
+        TypeMap[typeof(Decimal?)] = DbType.Decimal;
+        TypeMap[typeof(bool?)] = DbType.Boolean;
+        TypeMap[typeof(char?)] = DbType.StringFixedLength;
+        TypeMap[typeof(Guid?)] = DbType.Guid;
+        TypeMap[typeof(DateTime?)] = DbType.DateTime;
+        TypeMap[typeof(DateTimeOffset?)] = DbType.DateTimeOffset;
+        TypeMap[typeof(TimeSpan?)] = DbType.Time;
+        TypeMap[typeof(object)] = DbType.Object;
+    }}
+
+    public static DbType GetDbType(this Type type)
+    {{
+        return TypeMap.TryGetValue(type, out DbType dbType) ? dbType : DbType.Object;
+    }}
+
     public static T MapTo<T>(this IDataReader reader)
     {{
         var entity = Activator.CreateInstance<T>();

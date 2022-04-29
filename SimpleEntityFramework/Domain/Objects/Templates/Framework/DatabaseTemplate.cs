@@ -28,8 +28,6 @@ namespace {Namespace}
     [SuppressMessage(""Security"", ""CA2100"")]
     public class Database
     {{
-        private static readonly Dictionary<Type, DbType> _typeCache = new Dictionary<Type, DbType>();
-
         public string ProviderName {{ get; set; }}
         public string ConnectionString {{ get; set; }}
         public Database() {{ }}
@@ -102,23 +100,6 @@ namespace {Namespace}
             para.DbType = dbType;
             para.Size = size;
             return para;
-        }}
-        public DbType GetDbType(Type type)
-        {{
-            if (!_typeCache.TryGetValue(type, out var dbType))
-            {{
-                var converter = TypeDescriptor.GetConverter(DbType.String);
-                if (converter.CanConvertFrom(type))
-                    dbType = (DbType)converter.ConvertFrom(type.Name);
-                else
-                    try
-                    {{
-                        dbType = (DbType)converter.ConvertFrom(type.Name);
-                    }}
-                    catch {{ }}
-                _typeCache[type] = dbType;
-            }}
-            return dbType;
         }}
         public DbCommand GetSqlStringCommand(string sql, DbConnection conn = null)
         {{
